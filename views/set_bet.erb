@@ -1,0 +1,30 @@
+<h2>Set Bet</h2>
+
+<% if @error %>
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h5>Error: <%= @error %></h5>
+  </div>
+<% end %>
+
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h5>You have $<%= session[:player_money] %> please set bet</h5>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <form action="/set_bet" method="post">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-success">Set Bet</button>
+        </span>
+        <input type="text" name="bet_amount" class="form-control">
+      </div>
+    </form>
+  </div>
+</div>

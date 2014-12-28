@@ -1,0 +1,85 @@
+
+<% if @winner || @losser || @tier %>
+  <div class="alert <%= @winner != nil ? "alert-success" : "alert-danger" %> alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <% if @winner %>
+      <%= @winner %>
+    <% elsif @losser %>
+      <%= @losser %>
+    <% else %>
+      <%= @tier %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @game_over %>
+  <div class="form-inline">
+    <div class="form-group">
+      <h4>Play again?</h4>
+    </div>
+    <div class="form-group">
+      <form action="/" method="get">
+        <input type="submit" value="NO" class="btn btn-danger btn-sm">
+      </form>
+    </div>
+    <div class="form-group">
+      <form action='/' method="get">
+        <input type="submit" value="YES" class="btn btn-primary btn-sm">
+      </form>
+    </div>
+  </div>
+<% end %>
+
+<h1>Blackjack</h1>
+<div class="well">
+  <h3>Dealer's cards:</h3>
+  <% session[:dealer_cards].each_with_index do |dealer_card, index| %>
+    <% if index === 0 && !@game_over %>
+      <img src="/images/cards/cover.jpg" height="190" width="140">
+    <% else %>
+      <%= card_image(dealer_card) %>
+    <% end %>
+  <% end %>
+
+  <% if @game_over %>
+    <h4>Dealer is <%=calculate_total_value(session[:dealer_cards]) %></h4>
+  <% end %>
+
+  <% if session[:player_stay] || @game_over %>
+    <form action="/game/dealer/hit" method="post">
+      <button type="submit" class="btn btn-primary btn-sm">
+        See dealer's next card
+        <span class="glyphicon glyphicon-arrow-right">
+      </button>
+    </form>
+  <% end %>
+</div>
+
+<div class="well">
+  <h3>Player's cards:</h3>
+  <% session[:player_cards].each_with_index do |player_card, index| %>
+    <%= card_image(player_card) %>
+  <% end %>
+
+  <div class="player-info">
+    <h5>Bet amount <%= session[:bet_amount] %>, you have <%= session[:player_money] %>$</h5>
+    <h4><%= session[:player_name].capitalize %> is <%= calculate_total_value(session[:player_cards]) %></h4>
+  </div>
+</div>
+
+<% if !session[:player_stay] && !@game_over %>
+  <div class="form-inline">
+    <div class="form-group">
+      <form action="/game/player/hit" method="post">
+        <input type="submit" value="Hit" class="btn btn-success btn-lg">
+      </form>
+    </div>
+    <div class="form-group">
+      <form action="/game/player/stay" method="post">
+        <input type="submit" value="Stay" class="btn btn-warning btn-lg">
+      </form>
+    </div>
+  </div>
+<% end %>
